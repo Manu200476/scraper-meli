@@ -1,32 +1,38 @@
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-import time
+# from seo import SEOInfo
 
-base_url = 'https://www.mercadolibre.com.ar/'
+base_url = 'https://www.mercadolibre.com.ar/categorias'
 
 chrome_options = webdriver.ChromeOptions(); 
-chrome_options.add_experimental_option("excludeSwitches", ['enable-logging']);
 driver = webdriver.Chrome(options=chrome_options);  
 
 driver.get(base_url)
 time.sleep(2)
-driver.find_element(By.ID, 'newCookieDisclaimerButton').click()
-time.sleep(3)
 
-# Obtener h1, texto... meterlo en un json
+links = driver.find_elements(By.XPATH, '//li[@class="categories__item"]/a')
 
-div = driver.find_element(By.XPATH, '//div[@class="desktop__view-wrapper"]')
-enlaces = div.find_elements(By.XPATH,'//a')
+print('URL: ' + driver.current_url)
 
-for enlace in enlaces:
-    href = enlace.get_attribute('href')
-    driver.get(enlace.get_at)
-    products = driver.find_elements(By.XPATH, '//div[@class="ui-search-result__image"]')
-    products_a = products.find_elements(By.XPATH,'//a')
+for link in links:
+    time.sleep(3)
+    href = link.get_attribute('href')
+    driver.get(href)
+    time.sleep(3)
+    pagination_button = driver.find_element(By.XPATH, '//li[@class="andes-pagination__button"]')
+    products = driver.find_elements(By.XPATH, '//div[@class="ui-search-result__image"]/a')
 
-    # Obtener h1, texto... meterlo en un json
+    for product in products:
+        href = product.get_attribute('href')
+        driver.get(href)
+        time.sleep(2)
+        name = driver.find_element(By.XPATH, '//h1')
+        price = driver.find_element(By.XPATH, '//span[@class="price-tag-fraction"]')
+        num_reviews = driver.find_element(By.XPATH, '//span[@class="ui-pdp-review__amount"]')
+        reviews = driver.find_elements(By.XPATH, '//di[@class="ui-pdp-reviews__comments__review-comment"]')
+        description = driver.find_element(By.XPATH, '//p[@class="ui-pdp-description__content"]')
+        characteristics = driver.find_element(By.XPATH, '//table[@class="andes-table"]')
 
-    for product_a in products_a:
-        driver.get(product_a.get_attribute('href'))
-        # Obtener h1, descripcion,precio, img, meta description.... meterlo en un json
+    pagination_button.click()
+
