@@ -1,7 +1,6 @@
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-# from seo import SEOInfo
 
 base_url = 'https://www.mercadolibre.com.ar/categorias'
 
@@ -19,12 +18,15 @@ for link in links:
     time.sleep(3)
     href = link.get_attribute('href')
     driver.get(href)
-    time.sleep(3)
-    pagination_button = driver.find_element(By.XPATH, '//li[@class="andes-pagination__button"]')
     products = driver.find_elements(By.XPATH, '//div[@class="ui-search-result__image"]/a')
+    products_href = []
 
     for product in products:
-        href = product.get_attribute('href')
+        href = product.get_attribute("href")
+        products_href.append(href)
+
+    for href in products_href:
+        time.sleep(4)
         driver.get(href)
         time.sleep(2)
         name = driver.find_element(By.XPATH, '//h1')
@@ -34,5 +36,15 @@ for link in links:
         description = driver.find_element(By.XPATH, '//p[@class="ui-pdp-description__content"]')
         characteristics = driver.find_element(By.XPATH, '//table[@class="andes-table"]')
 
-    pagination_button.click()
+        p = {
+            'name': name,
+            'price': price,
+            'num_reviews': num_reviews,
+            'reviews': reviews,
+            'description': description,
+            'characteristics': characteristics
+        }
+        
+
+    # pagination_button.click()
 
