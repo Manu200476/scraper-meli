@@ -1,7 +1,6 @@
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
 base_url = 'https://www.mercadolibre.com.ar/categorias'
@@ -27,6 +26,7 @@ for href in link_href:
 
         products = driver.find_elements(By.XPATH, '//div[@class="ui-search-result__image"]/a')
         products_href = []
+
         for product in products:
             href = product.get_attribute("href")
             products_href.append(href)
@@ -34,12 +34,12 @@ for href in link_href:
         for href in products_href:
             driver.get(href)
             time.sleep(2)
-            name = driver.find_element(By.XPATH, '//h1')
-            price = driver.find_element(By.XPATH, '//span[@class="price-tag-fraction"]')
-            num_reviews = driver.find_element(By.XPATH, '//span[@class="ui-pdp-review__amount"]')
+            name = driver.find_element(By.XPATH, '//h1').text
+            price = driver.find_element(By.XPATH, '//span[@class="price-tag-fraction"]').text
+            num_reviews = driver.find_element(By.XPATH, '//span[@class="ui-pdp-review__amount"]').text
             reviews = driver.find_elements(By.XPATH, '//di[@class="ui-pdp-reviews__comments__review-comment"]')
-            description = driver.find_element(By.XPATH, '//p[@class="ui-pdp-description__content"]')
-            characteristics = driver.find_element(By.XPATH, '//table[@class="andes-table"]')
+            description = driver.find_element(By.XPATH, '//p[@class="ui-pdp-description__content"]').text
+            characteristics = driver.find_element(By.XPATH, '//table[@class="andes-table"]').text
         
         try:
             next_page = driver.find_element(By.PARTIAL_LINK_TEXT  , 'Siguiente')
